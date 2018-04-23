@@ -1,6 +1,6 @@
-<img src="https://taky.s3.amazonaws.com/SJBJhAonz.png" width="50">
+<img src="https://taky.s3.amazonaws.com/SJBJhAonz.png" width="75">
 
----
+## poe-currency
 
 `poe-currency` is a script designed to automatically determine profitable
 currency flipping rates and re-configure your poe.trade shop settings on
