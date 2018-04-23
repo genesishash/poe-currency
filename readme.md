@@ -6,6 +6,10 @@
 currency flipping rates and re-configure your poe.trade shop settings on
 a configurable interval.
 
+## prerequisites
+- `node` 5.0.0
+- `nvm`
+
 ## quick start
 
 ### install iced and dependencies
