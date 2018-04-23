@@ -1,4 +1,4 @@
-<img src="https://taky.s3.amazonaws.com/SJBJhAonz.png" width=100>
+<img src="https://taky.s3.amazonaws.com/SJBJhAonz.png" width="50">
 
 ---
 
