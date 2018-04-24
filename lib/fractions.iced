@@ -2,17 +2,24 @@ _ = require('wegweg')({
   globals: on
 })
 
+conf = require './../conf'
+
 obj = {}
 
-for x in [1..500]
-  for y in [1..500]
+for x in [1..conf.FRACTIONAL_MAXIMUM]
+  for y in [1..conf.FRACTIONAL_MAXIMUM]
     obj["#{x}/#{y}"] = parseFloat(x/y).toFixed(3)
     obj["#{y}/#{x}"] = parseFloat(y/x).toFixed(3)
 
 arr = []
 
 for k,v of obj
-  arr.push {fraction:k,value:+v}
+  arr.push {
+    fraction: k
+    value: +v
+    left: (+k.split('/').shift())
+    right: (+k.split('/').pop())
+  }
 
 arr = _.sortBy arr, (x) -> x.fraction.length
 

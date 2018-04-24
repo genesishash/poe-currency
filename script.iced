@@ -53,6 +53,16 @@ for item in currencies.list
     ~b/o #{item.suggested_chaos_fraction.fraction} #{item.name.toLowerCase()}
   """
 
+  skip = false
+
+  if conf.FRACTIONAL_MAXIMUM in [item.suggested_sell_fraction.left,item.suggested_sell_fraction.right]
+    skip = true
+  if conf.FRACTIONAL_MAXIMUM in [item.suggested_chaos_fraction.left,item.suggested_chaos_fraction.right]
+    skip = true
+  if skip
+    logger.warn 'Skipping generated position item (exceeds `FRACTIONAL_MAXIMUM`)'
+    continue
+
   positions.push(item)
 
 logger.info "Finished calculating initial market positions", positions.length
@@ -60,11 +70,15 @@ logger.info "Finished calculating initial market positions", positions.length
 if conf.OFFCURRENCY_TRADES_ENABLED
   logger.info "Building offcurrency market positions"
 
-  for item in _.clone(positions)
-    for alt in _.clone(currencies.list)
+  clone_positions = _.clone(positions)
+  clone_currencies = _.clone(currencies.list)
+
+  for item in clone_positions
+    for alt in clone_currencies
+      continue if item.name is alt.name
 
       clone = _.clone(item)
-      continue if alt.name is clone.name
+      log "#{clone.name}:#{alt.name}"
 
       clone.OFFCURRENCY = true
       clone.alt_name = alt.name
@@ -89,11 +103,17 @@ if conf.OFFCURRENCY_TRADES_ENABLED
         ~b/o #{clone.suggested_sell_fraction.fraction} #{alt.name.toLowerCase()}
       """
 
+      if conf.FRACTIONAL_MAXIMUM in [clone.suggested_sell_fraction.left,clone.suggested_sell_fraction.right]
+        logger.warn 'Skipping generated position item (exceeds `FRACTIONAL_MAXIMUM`)'
+        continue
+
       positions.push(clone)
 else
   logger.warn 'Offcurrency trading is disabled (config)'
 
 logger.info "Bumping positions on poe.trade", positions.length, conf.POETRADE_URL, conf.POETRADE_LEAGUE
+
+log JSON.stringify(positions,null,2)
 
 await poetrade.bump positions, defer e
 if e then throw e

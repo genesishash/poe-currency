@@ -28,22 +28,23 @@ poetrade.bump = ((arr,cb) ->
 
     if !position.OFFCURRENCY
       if !conf.SELL_ONLY_MODE
-        log.info 'Appending buy position to bump', "CHAOS:#{position.name}"
+        logger.info 'Appending buy position to bump', "CHAOS:#{position.name}"
 
         [left,right] = position.suggested_chaos_fraction.fraction.split '/'
         packet += """
           &sell_currency=Chaos+Orb&sell_value=#{right}&buy_value=#{left}&buy_currency=#{escape position.label}
         """
 
-      log.info 'Appending sell position to bump', "#{position.name}:CHAOS"
+      if !conf.BUY_ONLY_MODE
+        logger.info 'Appending sell position to bump', "#{position.name}:CHAOS"
 
-      [left,right] = position.suggested_sell_fraction.fraction.split '/'
-      packet += """
-        &sell_currency=#{escape position.label}&sell_value=#{left}&buy_value=#{right}&buy_currency=Chaos+Orb
-      """
+        [left,right] = position.suggested_sell_fraction.fraction.split '/'
+        packet += """
+          &sell_currency=#{escape position.label}&sell_value=#{left}&buy_value=#{right}&buy_currency=Chaos+Orb
+        """
 
     else if position.OFFCURRENCY
-      log.info 'Appending offcurrency position to bump', "#{position.name}:#{position.alt_name}"
+      logger.info 'Appending offcurrency position to bump', "#{position.name}:#{position.alt_name}"
 
       [left,right] = position.suggested_sell_fraction.fraction.split '/'
       packet += """
