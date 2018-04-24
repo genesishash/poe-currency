@@ -1,19 +1,29 @@
 _ = require('wegweg')({
-  globals: no
-  shelljs: no
+  globals: true
 })
 
-winston = require 'winston'
+conf = require './../conf'
+logger = require './logger'
 
-log = new winston.Logger({
-  exitOnError: no
-  transports: [
-    new (winston.transports.Console)({
-      timestamp: yes
-      colorize: yes
-    }),
-  ]
-})
+module.exports = poetrade = {
+  API_KEY: conf.POETRADE_URL.split('/').pop()
+}
 
-module.exports = log
+poetrade.bump = ((arr,cb) ->
+  logger.info 'Bumping poe.trade shop settings', arr.length
+
+  opt = {
+    cookies: {
+      league: conf.POETRADE_LEAGUE
+      apikey: @API_KEY
+    }
+  }
+
+  await _.get "http://currency.poe.trade/shop?league=#{conf.POETRADE_LEAGUE}", opt, defer e,r
+  if e then return cb e
+
+  log r.body
+
+  return cb null, true
+)
 

@@ -4,11 +4,15 @@ _ = require('wegweg')({
 
 conf = require './conf'
 logger = require './lib/logger'
+
+poetrade = require './lib/poetrade'
 fractions = require './lib/fractions'
 currencies = require './lib/currencies'
 
 logger.info "Script loaded", (start = new Date), conf
 logger.info "Fetching prices for all currencies", currencies.list.length
+
+positions = []
 
 for item in currencies.list
   if item.name in conf.SKIP_CURRENCIES
@@ -45,13 +49,20 @@ for item in currencies.list
     ~b/o #{item.suggested_chaos_fraction.fraction} #{item.name.toLowerCase()}
   """
 
-logger.info "Finished calculating initial market positions"
+  positions.push(item)
 
-log currencies.list
+logger.info "Finished calculating initial market positions", positions.length
 
-# @todo: offcurrency positions
-# @todo: poe.trade bump interval
+# @todo: append offcurrency position permutations
 
-log e
+logger.info "Bumping positions on poe.trade", positions.length, conf.POETRADE_URL, conf.POETRADE_LEAGUE
+
+await poetrade.bump positions, defer e
+if e then throw e
+
+logger.info "Finished routine successfully, exiting", {
+  elapsed_seconds: Math.round((new Date - start)/1000)
+}
+
 exit 0
 
