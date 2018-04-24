@@ -4,8 +4,8 @@ _ = require('wegweg')({
 
 obj = {}
 
-for x in [1..100]
-  for y in [1..100]
+for x in [1..500]
+  for y in [1..500]
     obj["#{x}/#{y}"] = parseFloat(x/y).toFixed(3)
     obj["#{y}/#{x}"] = parseFloat(y/x).toFixed(3)
 

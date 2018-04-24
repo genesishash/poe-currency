@@ -26,6 +26,26 @@ arr = [
   'VAAL'
 ]
 
+labels = [
+  null
+  'Orb of Alteration'
+  'Orb of Fusing'
+  'Orb of Alchemy'
+  'Chaos Orb'
+  'Gemcutter\'s Prism'
+  'Exalted Orb'
+  'Chromatic Orb'
+  'Jeweller\'s Orb'
+  'Orb of Chance'
+  'Cartographer\'s Chisel'
+  'Orb of Scouring'
+  'Blessed Orb'
+  'Orb of Regret'
+  'Regal Orb'
+  'Divine Orb'
+  'Vaal Orb'
+]
+
 currencies = []
 
 i = 1
@@ -42,6 +62,7 @@ while 1
 
   currencies.push {
     name: cur
+    label: labels[i]
     code: i
   }
 
